@@ -15,14 +15,6 @@
 
 <script>
   $(function() {
-    $('#new-form').submit(function(event) {
-      event.preventDefault();
-      var textbox = $('.new-todo');
-      console.log("Task: ", textbox.val());
-    });
-
-
-
     // The taskHtml method takes in a JavaScript representation
     // of the task and produces an HTML representation using
     // <li> tags
@@ -36,7 +28,7 @@
 
           return liElement;
     }
-
+    
     // toggleTask takes in an HTML representation of
     // an event that fires from an HTML representation of
     // the toggle checkbox and  performs an API request to toggle
@@ -67,5 +59,25 @@
       $('.toggle').change(toggleTask);
         
     });
+
+    //takes in a new task from the form and displays it on the list.
+
+    $('#new-form').submit(function(event) {
+      event.preventDefault();
+      var textbox = $('.new-todo');
+      var payload = {
+        task: {
+          title: textbox.val()
+        }
+      };
+      $.post("/tasks", payload).success(function(data) {
+        var htmlString = taskHTML(data);
+        var ulTodos = $('.todo-list');
+        ulTodos.append(htmlString);
+        $('.toggle').click(toggleTask);
+      });
+    });
+
   });
+  
 </script>
